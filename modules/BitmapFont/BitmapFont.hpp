@@ -14,12 +14,12 @@ public:
 
 	/**
 	 * Load a bitmap font from an image file
-	 * @param image_path: path to the bitmap font's image
+	 * @param imagePath: path to the bitmap font's image
 	 * @param width: number of glyphs on each line
 	 * @param height: number of glyphs on each column
 	 * @return true if loading succeeded, false if it failed
 	 */
-	bool loadFromFile(const std::string& image_path, int width=16, int height=6);
+	bool loadFromFile(const std::string& imagePath, size_t width=16, size_t height=6);
 
 	/**
 	 * Get the font's texture
@@ -33,15 +33,13 @@ public:
 	 */
 	sf::IntRect getGlyphRect(char character) const;
 
-	int getGlyphHeight() const;
-	int getGlyphWidth() const;
+	const sf::Vector2u& getGlyphSize() const;
 
 private:
-	sf::Texture m_texture;
-	int         m_width;
-	int         m_height;
-	int         m_glyph_width;
-	int         m_glyph_height;
+	sf::Texture  m_texture;
+	size_t       m_width;
+	size_t       m_height;
+	sf::Vector2u m_glyphSize;
 };
 
 

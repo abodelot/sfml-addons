@@ -10,12 +10,12 @@ int main()
 	font.loadFromFile("resources/font.png");
 
 	// Default text
-	BitmapText text("Hello world!", font);
+	BitmapText text("Hello world!\nThis is a new line and\ta tabulation", font);
 	text.setPosition(20, 50);
 
 	// Text with a color
-	BitmapText text2("Bitmap text written in green", font);
-	text2.setColor(sf::Color::Green);
+	BitmapText text2("Bitmap text written in orange", font);
+	text2.setColor(sf::Color(255, 128, 0));
 	text2.setPosition(20, 100);
 
 	// Text scalled

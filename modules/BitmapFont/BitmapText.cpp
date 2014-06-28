@@ -77,23 +77,24 @@ sf::Vector2f BitmapText::findCharacterPos(size_t index)
 
 	// Compute the position
 	sf::Vector2f position;
+	sf::Vector2u glyphSize = m_font->getGlyphSize();
 	for (size_t i = 0; i < index; ++i)
 	{
 		sf::Uint32 current = m_string[i];
 		switch (current)
 		{
 			case L'\n': // New line
-				position.y += m_font->getGlyphHeight();
+				position.y += glyphSize.y;
 				position.x = 0;
 				break;
 			case L'\t': // Horizontal tab
-				position.x += m_font->getGlyphWidth() * 4;
+				position.x += glyphSize.x * 4;
 				break;
 			case L'\v': // Vertical tab
-				position.y += m_font->getGlyphHeight() * 4;
+				position.y += glyphSize.y * 4;
 				break;
 			default:
-				position.x += m_font->getGlyphWidth();
+				position.x += glyphSize.x;
 				break;
 		}
 	}
@@ -142,11 +143,12 @@ void BitmapText::updateGeometry()
 		sf::Uint32 current = m_string[i];
 
 		// Handle special characters
+		sf::Vector2u glyphSize = m_font->getGlyphSize();
 		switch (current)
 		{
-			case L'\t': x += m_font->getGlyphWidth() * 4;     continue;
-			case L'\n': y += m_font->getGlyphHeight(); x = 0; continue;
-			case L'\v': y += m_font->getGlyphHeight() * 4;    continue;
+			case L'\t': x += glyphSize.x * 4;    continue;
+			case L'\n': y += glyphSize.y; x = 0; continue;
+			case L'\v': y += glyphSize.y * 4;    continue;
 		}
 
 		// Extract the current glyph's description

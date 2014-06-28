@@ -1,26 +1,28 @@
 #include <cstdio>
 #include "BitmapFont.hpp"
 
+// ASCII Printable characters range
+const char FIRST_PRINTABLE_CHAR = 32;
+const char LAST_PRINTABLE_CHAR = 126;
+
 
 BitmapFont::BitmapFont():
 	m_width(0),
-	m_height(0),
-	m_glyph_width(0),
-	m_glyph_height(0)
+	m_height(0)
 {
 }
 
 
-bool BitmapFont::loadFromFile(const std::string& image_path, int width, int height)
+bool BitmapFont::loadFromFile(const std::string& imagePath, size_t width, size_t height)
 {
-	if (m_texture.loadFromFile(image_path))
+	if (width > 0 && height > 0 && m_texture.loadFromFile(imagePath))
 	{
 		m_width = width;
 		m_height = height;
 
-		// Compute character area from image dimensions
-		m_glyph_width = m_texture.getSize().x / m_width;
-		m_glyph_height = m_texture.getSize().y / m_height;
+		// Compute the size of a glyph from image dimensions
+		m_glyphSize.x = m_texture.getSize().x / m_width;
+		m_glyphSize.y = m_texture.getSize().y / m_height;
 		return true;
 	}
 	return false;
@@ -35,34 +37,24 @@ const sf::Texture& BitmapFont::getTexture() const
 
 sf::IntRect BitmapFont::getGlyphRect(char character) const
 {
-	// ASCII Printable characters range
-	static const char FIRST_CHAR = 32;
-	static const char LAST_CHAR = 126;
-
-	if (character < FIRST_CHAR || character > LAST_CHAR)
+	if (character < FIRST_PRINTABLE_CHAR || character > LAST_PRINTABLE_CHAR)
 	{
+		fprintf(stderr, "BitmapFont: non printable character encoutered (ASCII %d\n)", character);
 		// Replace non printable characters with '?'
-		fprintf(stderr, "warning: non printable character (ASCII %d\n)", character);
 		character = '?';
 	}
-	character -= FIRST_CHAR;
+	character -= FIRST_PRINTABLE_CHAR;
 
 	sf::IntRect subrect;
-	subrect.left = (character % m_width) * m_glyph_width;
-	subrect.width = m_glyph_width;
-	subrect.top = (character / m_width) * m_glyph_height;
-	subrect.height = m_glyph_height;
+	subrect.left = (character % m_width) * m_glyphSize.x;
+	subrect.width = m_glyphSize.x;
+	subrect.top = (character / m_width) * m_glyphSize.y;
+	subrect.height = m_glyphSize.y;
 	return subrect;
 }
 
 
-int BitmapFont::getGlyphHeight() const
+const sf::Vector2u& BitmapFont::getGlyphSize() const
 {
-	return m_glyph_height;
-}
-
-
-int BitmapFont::getGlyphWidth() const
-{
-	return m_glyph_width;
+	return m_glyphSize;
 }
